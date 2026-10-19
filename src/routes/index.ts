@@ -1,12 +1,25 @@
-import { Router } from "express";
-import { authRoutes } from "./authRoutes";
-import { userRoutes } from "./userRoutes";
-import { adminRoutes } from "./adminRoutes";
+import { RequestHandler, Router } from "express";
+import { UserRole } from "../entities/user-role.enum";
+import { authorize } from "../middlewares/authorize.middleware";
+import { AuthController } from "../controllers/auth.controller";
+import { HealthController } from "../controllers/health.controller";
+import { UserController } from "../controllers/user.controller";
 
-const routes = Router();
+export interface RouterDeps {
+  health: HealthController;
+  auth: AuthController;
+  user: UserController;
+  authenticate: RequestHandler;
+}
 
-routes.use("/auth", authRoutes);
-routes.use("/users", userRoutes);
-routes.use("/admin", adminRoutes);
+export function buildRouter(deps: RouterDeps): Router {
+  const router = Router();
 
-export { routes };
+  router.get("/health", deps.health.check);
+  router.post("/auth/login", deps.auth.login);
+
+  router.get("/users/me", deps.authenticate, deps.user.me);
+  router.post("/users", deps.authenticate, authorize(UserRole.ADMIN), deps.user.create);
+
+  return router;
+}
