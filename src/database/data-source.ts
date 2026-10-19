@@ -1,20 +1,17 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
-import dotenv from "dotenv";
-import { User } from "../entities/User";
-
-dotenv.config();
+import { env } from "../config/env";
+import { User } from "../entities/user.entity";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
-  host: process.env.DB_HOST,
-  port: Number(process.env.DB_PORT),
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_DATABASE,
-  synchronize: true, // etapa acadêmica: cria/atualiza as tabelas automaticamente a partir das entidades
-  logging: false,
+  host: env.db.host,
+  port: env.db.port,
+  username: env.db.username,
+  password: env.db.password,
+  database: env.db.database,
+  ssl: env.db.ssl ? { rejectUnauthorized: false } : false,
+  // Temporario: as migrations entram no proximo PR e o synchronize sai.
+  synchronize: true,
   entities: [User],
-  migrations: [],
-  subscribers: [],
 });
