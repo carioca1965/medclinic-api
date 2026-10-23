@@ -1,4 +1,5 @@
 import "reflect-metadata";
+import { join } from "path";
 import { DataSource } from "typeorm";
 import { env } from "../config/env";
 import { User } from "../entities/user.entity";
@@ -11,7 +12,10 @@ export const AppDataSource = new DataSource({
   password: env.db.password,
   database: env.db.database,
   ssl: env.db.ssl ? { rejectUnauthorized: false } : false,
-  // Temporario: as migrations entram no proximo PR e o synchronize sai.
-  synchronize: true,
+  synchronize: false,
   entities: [User],
+  // .ts em desenvolvimento (src) e .js no build (dist).
+  migrations: [join(__dirname, "migrations", "*.{ts,js}")],
+  // As migrations rodam sozinhas ao iniciar a aplicacao (tambem em producao).
+  migrationsRun: true,
 });
