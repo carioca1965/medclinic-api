@@ -1,0 +1,17 @@
+# Banco PostgreSQL para desenvolvimento local.
+# Uso: docker compose up -d
+services:
+  db:
+    image: postgres:16
+    container_name: medclinic-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: medclinic
+    ports:
+      - "5432:5432"
+    volumes:
+      - medclinic-data:/var/lib/postgresql/data
+
+volumes:
+  medclinic-data:
