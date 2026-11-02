@@ -17,6 +17,7 @@ function build(doctorExists = true) {
     createWithUser: vi.fn(),
     findById: vi.fn().mockResolvedValue(doctorExists ? ({ id: 3 } as Doctor) : null),
     findByCrm: vi.fn(),
+    findByUserId: vi.fn(),
     findPage: vi.fn(),
   };
   const shifts: WorkShiftRepository = {

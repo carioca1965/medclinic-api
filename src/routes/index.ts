@@ -2,6 +2,9 @@ import { RequestHandler, Router } from "express";
 import { UserRole } from "../entities/user-role.enum";
 import { authorize } from "../middlewares/authorize.middleware";
 import { AuthController } from "../controllers/auth.controller";
+import { AppointmentController } from "../controllers/appointment.controller";
+import { CalendarController } from "../controllers/calendar.controller";
+import { MedicalRecordController } from "../controllers/medical-record.controller";
 import { DoctorController } from "../controllers/doctor.controller";
 import { HealthController } from "../controllers/health.controller";
 import { WorkScheduleController } from "../controllers/work-schedule.controller";
@@ -15,6 +18,9 @@ export interface RouterDeps {
   patient: PatientController;
   doctor: DoctorController;
   workSchedule: WorkScheduleController;
+  calendar: CalendarController;
+  appointment: AppointmentController;
+  medicalRecord: MedicalRecordController;
   authenticate: RequestHandler;
 }
 
@@ -39,6 +45,16 @@ export function buildRouter(deps: RouterDeps): Router {
 
   router.put("/doctors/:id/work-schedule", deps.authenticate, authorize(UserRole.ADMIN), deps.workSchedule.replace);
   router.get("/doctors/:id/work-schedule", deps.authenticate, deps.workSchedule.get);
+
+  router.get("/doctors/:id/calendar", deps.authenticate, deps.calendar.get);
+
+  router.post("/appointments", deps.authenticate, authorize(UserRole.ADMIN, UserRole.SECRETARY), deps.appointment.create);
+  router.get("/appointments", deps.authenticate, deps.appointment.list);
+  router.get("/appointments/:id", deps.authenticate, deps.appointment.get);
+  router.patch("/appointments/:id/status", deps.authenticate, deps.appointment.updateStatus);
+
+  router.post("/patients/:id/medical-records", deps.authenticate, authorize(UserRole.DOCTOR), deps.medicalRecord.create);
+  router.get("/patients/:id/medical-records", deps.authenticate, authorize(UserRole.DOCTOR, UserRole.ADMIN), deps.medicalRecord.list);
 
   return router;
 }
