@@ -36,6 +36,7 @@ function build(
     createWithUser: vi.fn().mockResolvedValue(stored),
     findById: vi.fn().mockResolvedValue(stored),
     findByCrm: vi.fn().mockResolvedValue(null),
+    findByUserId: vi.fn(),
     findPage: vi.fn().mockResolvedValue({ items: [stored], total: 1 }),
     ...doctorOverrides,
   };
