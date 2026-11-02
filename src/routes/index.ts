@@ -2,6 +2,7 @@ import { RequestHandler, Router } from "express";
 import { UserRole } from "../entities/user-role.enum";
 import { authorize } from "../middlewares/authorize.middleware";
 import { AuthController } from "../controllers/auth.controller";
+import { DoctorController } from "../controllers/doctor.controller";
 import { HealthController } from "../controllers/health.controller";
 import { PatientController } from "../controllers/patient.controller";
 import { UserController } from "../controllers/user.controller";
@@ -11,6 +12,7 @@ export interface RouterDeps {
   auth: AuthController;
   user: UserController;
   patient: PatientController;
+  doctor: DoctorController;
   authenticate: RequestHandler;
 }
 
@@ -28,6 +30,10 @@ export function buildRouter(deps: RouterDeps): Router {
   router.get("/patients/:id", deps.authenticate, deps.patient.get);
   router.patch("/patients/:id", deps.authenticate, authorize(UserRole.ADMIN, UserRole.SECRETARY), deps.patient.update);
   router.delete("/patients/:id", deps.authenticate, authorize(UserRole.ADMIN), deps.patient.remove);
+
+  router.post("/doctors", deps.authenticate, authorize(UserRole.ADMIN), deps.doctor.create);
+  router.get("/doctors", deps.authenticate, deps.doctor.list);
+  router.get("/doctors/:id", deps.authenticate, deps.doctor.get);
 
   return router;
 }
