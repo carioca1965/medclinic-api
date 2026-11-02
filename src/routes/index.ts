@@ -4,6 +4,7 @@ import { authorize } from "../middlewares/authorize.middleware";
 import { AuthController } from "../controllers/auth.controller";
 import { DoctorController } from "../controllers/doctor.controller";
 import { HealthController } from "../controllers/health.controller";
+import { WorkScheduleController } from "../controllers/work-schedule.controller";
 import { PatientController } from "../controllers/patient.controller";
 import { UserController } from "../controllers/user.controller";
 
@@ -13,6 +14,7 @@ export interface RouterDeps {
   user: UserController;
   patient: PatientController;
   doctor: DoctorController;
+  workSchedule: WorkScheduleController;
   authenticate: RequestHandler;
 }
 
@@ -34,6 +36,9 @@ export function buildRouter(deps: RouterDeps): Router {
   router.post("/doctors", deps.authenticate, authorize(UserRole.ADMIN), deps.doctor.create);
   router.get("/doctors", deps.authenticate, deps.doctor.list);
   router.get("/doctors/:id", deps.authenticate, deps.doctor.get);
+
+  router.put("/doctors/:id/work-schedule", deps.authenticate, authorize(UserRole.ADMIN), deps.workSchedule.replace);
+  router.get("/doctors/:id/work-schedule", deps.authenticate, deps.workSchedule.get);
 
   return router;
 }
