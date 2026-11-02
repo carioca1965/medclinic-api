@@ -19,5 +19,6 @@ export interface DoctorRepository {
   createWithUser(data: NewDoctor): Promise<Doctor>;
   findById(id: number): Promise<Doctor | null>;
   findByCrm(crm: string): Promise<Doctor | null>;
+  findByUserId(userId: number): Promise<Doctor | null>;
   findPage(query: DoctorPageQuery): Promise<{ items: Doctor[]; total: number }>;
 }

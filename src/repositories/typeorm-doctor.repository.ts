@@ -54,6 +54,10 @@ export class TypeOrmDoctorRepository implements DoctorRepository {
     return this.repository.findOne({ where: { crm }, relations: { user: true } });
   }
 
+  findByUserId(userId: number): Promise<Doctor | null> {
+    return this.repository.findOne({ where: { user: { id: userId } }, relations: { user: true } });
+  }
+
   async findPage(query: DoctorPageQuery): Promise<{ items: Doctor[]; total: number }> {
     const builder = this.repository
       .createQueryBuilder("doctor")
