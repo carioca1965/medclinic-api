@@ -2,6 +2,7 @@ import "reflect-metadata";
 import { join } from "path";
 import { DataSource } from "typeorm";
 import { env } from "../config/env";
+import { Doctor } from "../entities/doctor.entity";
 import { Patient } from "../entities/patient.entity";
 import { User } from "../entities/user.entity";
 
@@ -14,7 +15,7 @@ export const AppDataSource = new DataSource({
   database: env.db.database,
   ssl: env.db.ssl ? { rejectUnauthorized: false } : false,
   synchronize: false,
-  entities: [User, Patient],
+  entities: [User, Patient, Doctor],
   // .ts em desenvolvimento (src) e .js no build (dist).
   migrations: [join(__dirname, "migrations", "*.{ts,js}")],
   // As migrations rodam sozinhas ao iniciar a aplicacao (tambem em producao).
