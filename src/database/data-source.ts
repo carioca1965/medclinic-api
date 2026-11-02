@@ -4,6 +4,7 @@ import { DataSource } from "typeorm";
 import { env } from "../config/env";
 import { Doctor } from "../entities/doctor.entity";
 import { Patient } from "../entities/patient.entity";
+import { WorkShift } from "../entities/work-shift.entity";
 import { User } from "../entities/user.entity";
 
 export const AppDataSource = new DataSource({
@@ -15,7 +16,7 @@ export const AppDataSource = new DataSource({
   database: env.db.database,
   ssl: env.db.ssl ? { rejectUnauthorized: false } : false,
   synchronize: false,
-  entities: [User, Patient, Doctor],
+  entities: [User, Patient, Doctor, WorkShift],
   // .ts em desenvolvimento (src) e .js no build (dist).
   migrations: [join(__dirname, "migrations", "*.{ts,js}")],
   // As migrations rodam sozinhas ao iniciar a aplicacao (tambem em producao).
